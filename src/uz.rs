@@ -18,25 +18,27 @@
  * along with uintz.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Uz32 {
-    v: u32,
-}
+use super::Uintz;
+use super::Uz32;
+use super::Uz;
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Uz<T: Uintz> {
-    hi: T,
-    lo: T,
-}
+impl Uintz for Uz<Uz32> {
 
-pub trait Uintz {
-    fn zero(&self) -> Self;
+    fn zero(&self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 
-    fn augment(self) -> Uz<Self>
-    where
-        Self: std::marker::Sized;
+    fn augment(self) -> Uz<Self> {
+        Uz { hi: self.zero(), lo: self, }
+    }
 
-    fn addc(self, other: Self, carry: bool) -> (Self, bool)
-    where
-        Self: std::marker::Sized;
+    fn addc(self, other: Self, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc(other.lo, carry);
+        let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
 }
