@@ -42,6 +42,8 @@ pub trait Uintz {
     where
         Self: std::marker::Sized;
 
+    fn max_value(self) -> Self;
+
     fn zero(&self) -> Self;
 
 }

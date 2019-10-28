@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn addc2() {
-        let (v, c) = new(u32::max_value()).addc(new(1), false);
+        let (v, c) = new(0).max_value().addc(new(1), false);
         assert_eq!(v, new(0));
         assert_eq!(c, true);
     }
@@ -108,6 +108,10 @@ impl Uintz for Uz32 {
             hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn max_value(self) -> Self {
+        Self { v:u32::max_value() }
     }
 
     fn zero(&self) -> Self {

@@ -22,6 +22,74 @@ use crate::Uintz;
 use crate::Uz32;
 use crate::Uz;
 
+#[cfg(test)]
+mod tests {
+
+    use crate::*;
+
+    fn new(v: u32) -> Uz<Uz32> {
+        from_u32(v).augment()
+    }
+
+    #[test]
+    fn eq0() {
+        assert_eq!(new(0), new(0));
+    }
+
+    #[test]
+    fn eq1() {
+        assert_ne!(new(0), new(1));
+    }
+
+    #[test]
+    fn eq2() {
+        assert_eq!(new(u32::max_value()), new(u32::max_value()));
+    }
+
+    #[test]
+    fn ord0() {
+        assert!(new(0) < new(1));
+    }
+
+    #[test]
+    fn ord1() {
+        assert!(new(0) < new(u32::max_value()));
+    }
+
+    #[test]
+    fn zero0() {
+        assert_eq!(new(u32::max_value()).zero(), new(0));
+    }
+
+    #[test]
+    fn augment0() {
+        let v = new(u32::max_value());
+        let va = v.augment();
+        assert_eq!(va, Uz { hi:v.zero(), lo:v, });
+    }
+
+    #[test]
+    fn addc0() {
+        let (v, c) = new(0).addc(new(1), false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc1() {
+        let (v, c) = new(0).addc(new(1), true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc2() {
+        let (v, c) = new(0).max_value().addc(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
+}
 impl Uintz for Uz<Uz32> {
 
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
@@ -32,6 +100,13 @@ impl Uintz for Uz<Uz32> {
 
     fn augment(self) -> Uz<Self> {
         Uz { hi: self.zero(), lo: self, }
+    }
+
+    fn max_value(self) -> Self {
+        Self {
+            hi:self.hi.max_value(),
+            lo:self.hi.max_value(),
+        }
     }
 
     fn zero(&self) -> Self {
