@@ -18,27 +18,27 @@
  * along with uintz.  If not, see <http://www.gnu.org/licenses/>
  */
 
-use super::Uintz;
-use super::Uz32;
-use super::Uz;
+use crate::Uintz;
+use crate::Uz32;
+use crate::Uz;
 
 impl Uintz for Uz<Uz32> {
 
-    fn zero(&self) -> Self {
-        Self {
-            hi: self.hi.zero(),
-            lo: self.hi.zero(),
-        }
+    fn addc(self, other: Self, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc(other.lo, carry);
+        let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
     }
 
     fn augment(self) -> Uz<Self> {
         Uz { hi: self.zero(), lo: self, }
     }
 
-    fn addc(self, other: Self, carry: bool) -> (Self, bool) {
-        let (lo, loc) = self.lo.addc(other.lo, carry);
-        let (hi, hic) = self.hi.addc(other.hi, loc);
-        (Self { hi, lo }, hic)
+    fn zero(&self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
     }
 
 }

@@ -18,12 +18,18 @@
  * along with uintz.  If not, see <http://www.gnu.org/licenses/>
  */
 
-use intz_utrait::Uintz;
+use crate::Uintz;
+use crate::Uz;
+use crate::Uz32;
 
 #[cfg(test)]
 mod tests {
 
-    use super::*;
+    use crate::*;
+
+    fn new(v: u32) -> Uz32 {
+        from_u32(v)
+    }
 
     #[test]
     fn eq0() {
@@ -51,52 +57,41 @@ mod tests {
     }
 
     #[test]
-    fn add0() {
-        assert_eq!(new(0) + new(0), new(0))
+    fn zero0() {
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
-    fn add1() {
-        assert_eq!(new(0) + new(1), new(1))
+    fn augment0() {
+        let v = new(u32::max_value());
+        let va = v.augment();
+        assert_eq!(va, Uz { hi:v.zero(), lo:v, });
     }
 
     #[test]
-    fn add2() {
-        assert_eq!(new(1) + new(2), new(3))
+    fn addc0() {
+        let (v, c) = new(0).addc(new(1), false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
     }
 
     #[test]
-    fn add3() {
-        assert_eq!(new(u32::max_value()) + new(0), new(u32::max_value()))
+    fn addc1() {
+        let (v, c) = new(0).addc(new(1), true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
     }
 
     #[test]
-    #[should_panic(expected = "integer overflow")]
-    fn add4() {
-        let _ = new(u32::max_value()) + new(1);
+    fn addc2() {
+        let (v, c) = new(u32::max_value()).addc(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
     }
 
-    // FIXME: u32 methods at https://doc.rust-lang.org/std/primitive.u32.html
-
-}
-
-pub fn new(v: u32) -> Uz32 {
-    Uz32 { v }
 }
 
 impl Uintz for Uz32 {
-    fn zero(&self) -> Self {
-        Self {
-            v: 0,
-        }
-    }
-
-    fn augment(self) -> Uz<Self> {
-        Uz {
-            hi: self.zero(),
-            lo: self,
-        }
-    }
 
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let nv: u64 = self.v as u64 + other.v as u64 + if carry { 1 } else { 0 };
@@ -107,4 +102,18 @@ impl Uintz for Uz32 {
             nv / 0x100000000u64 != 0,
         )
     }
+
+    fn augment(self) -> Uz<Self> {
+        Uz {
+            hi: self.zero(),
+            lo: self,
+        }
+    }
+
+    fn zero(&self) -> Self {
+        Self {
+            v: 0,
+        }
+    }
+
 }
