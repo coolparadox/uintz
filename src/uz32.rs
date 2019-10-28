@@ -57,15 +57,21 @@ mod tests {
     }
 
     #[test]
-    fn zero0() {
-        assert_eq!(new(u32::max_value()).zero(), new(0));
+    fn min_value0() {
+        assert_eq!(new(u32::max_value()).min_value(), new(0));
     }
 
     #[test]
     fn augment0() {
         let v = new(u32::max_value());
         let va = v.augment();
-        assert_eq!(va, Uz { hi:v.zero(), lo:v, });
+        assert_eq!(
+            va,
+            Uz {
+                hi: v.min_value(),
+                lo: v,
+            }
+        );
     }
 
     #[test]
@@ -92,7 +98,6 @@ mod tests {
 }
 
 impl Uintz for Uz32 {
-
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let nv: u64 = self.v as u64 + other.v as u64 + if carry { 1 } else { 0 };
         (
@@ -105,19 +110,18 @@ impl Uintz for Uz32 {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.zero(),
+            hi: self.min_value(),
             lo: self,
         }
     }
 
     fn max_value(self) -> Self {
-        Self { v:u32::max_value() }
-    }
-
-    fn zero(&self) -> Self {
         Self {
-            v: 0,
+            v: u32::max_value(),
         }
     }
 
+    fn min_value(self) -> Self {
+        Self { v: 0 }
+    }
 }

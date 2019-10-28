@@ -19,8 +19,8 @@
  */
 
 use crate::Uintz;
-use crate::Uz32;
 use crate::Uz;
+use crate::Uz32;
 
 #[cfg(test)]
 mod tests {
@@ -57,15 +57,21 @@ mod tests {
     }
 
     #[test]
-    fn zero0() {
-        assert_eq!(new(u32::max_value()).zero(), new(0));
+    fn min_value0() {
+        assert_eq!(new(u32::max_value()).min_value(), new(0));
     }
 
     #[test]
     fn augment0() {
         let v = new(u32::max_value());
         let va = v.augment();
-        assert_eq!(va, Uz { hi:v.zero(), lo:v, });
+        assert_eq!(
+            va,
+            Uz {
+                hi: v.min_value(),
+                lo: v,
+            }
+        );
     }
 
     #[test]
@@ -90,8 +96,8 @@ mod tests {
     }
 
 }
-impl Uintz for Uz<Uz32> {
 
+impl Uintz for Uz<Uz32> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
@@ -99,21 +105,23 @@ impl Uintz for Uz<Uz32> {
     }
 
     fn augment(self) -> Uz<Self> {
-        Uz { hi: self.zero(), lo: self, }
+        Uz {
+            hi: self.min_value(),
+            lo: self,
+        }
     }
 
     fn max_value(self) -> Self {
         Self {
-            hi:self.hi.max_value(),
-            lo:self.hi.max_value(),
+            hi: self.hi.max_value(),
+            lo: self.hi.max_value(),
         }
     }
 
-    fn zero(&self) -> Self {
+    fn min_value(self) -> Self {
         Self {
-            hi: self.hi.zero(),
-            lo: self.hi.zero(),
+            hi: self.hi.min_value(),
+            lo: self.hi.min_value(),
         }
     }
-
 }

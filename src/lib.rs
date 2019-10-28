@@ -33,7 +33,6 @@ pub struct Uz<T: Uintz> {
 }
 
 pub trait Uintz {
-
     fn addc(self, other: Self, carry: bool) -> (Self, bool)
     where
         Self: std::marker::Sized;
@@ -44,8 +43,7 @@ pub trait Uintz {
 
     fn max_value(self) -> Self;
 
-    fn zero(&self) -> Self;
-
+    fn min_value(self) -> Self;
 }
 
 pub fn from_u32(v: u32) -> Uz32 {
