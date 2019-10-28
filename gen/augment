@@ -1,0 +1,5 @@
+#!/usr/bin/env -S sed -f
+/fn new/s/Uz32/Uz<Uz32>/
+/from_u32/s/$/.augment()/
+/^impl Uintz/s/Uz32/Uz<Uz32>/
+/mod tests/s/tests/testsz/
