@@ -116,6 +116,27 @@ mod tests {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz32 {
