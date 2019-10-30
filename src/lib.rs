@@ -49,6 +49,14 @@ pub trait Uintz {
     fn max_value(self) -> Self;
 
     fn min_value(self) -> Self;
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool)
+    where
+        Self: std::marker::Sized;
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool)
+    where
+        Self: std::marker::Sized;
 }
 
 pub fn from_u32(v: u32) -> Uz32 {

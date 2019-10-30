@@ -55,4 +55,16 @@ impl Uintz for Uz<Uz32> {
             lo: self.hi.min_value(),
         }
     }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
+    }
 }

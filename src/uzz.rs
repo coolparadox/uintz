@@ -118,6 +118,48 @@ mod testsz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 #[cfg(test)]
@@ -214,6 +256,48 @@ mod testszz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz32>> {
@@ -248,6 +332,18 @@ impl Uintz for Uz<Uz<Uz32>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -345,6 +441,48 @@ mod testszzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz32>>> {
@@ -379,6 +517,18 @@ impl Uintz for Uz<Uz<Uz<Uz32>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -476,6 +626,48 @@ mod testszzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
@@ -510,6 +702,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -612,6 +816,48 @@ mod testszzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
@@ -646,6 +892,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -749,6 +1007,48 @@ mod testszzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
@@ -783,6 +1083,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -887,6 +1199,48 @@ mod testszzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
@@ -921,6 +1275,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -1026,6 +1392,48 @@ mod testszzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
@@ -1060,6 +1468,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -1166,6 +1586,48 @@ mod testszzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
@@ -1200,6 +1662,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -1307,6 +1781,48 @@ mod testszzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
@@ -1341,6 +1857,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -1449,6 +1977,48 @@ mod testszzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
@@ -1483,6 +2053,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -1592,6 +2174,48 @@ mod testszzzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
@@ -1626,6 +2250,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -1736,6 +2372,48 @@ mod testszzzzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>> {
@@ -1770,6 +2448,18 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }
 
@@ -1881,6 +2571,48 @@ mod testszzzzzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb0() {
+        let (v, c) = new(1).subb(new(1), false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb1() {
+        let (v, c) = new(0).subb(new(1), false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb2() {
+        let (v, c) = new(1).subb(new(1), true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>>> {
@@ -1915,5 +2647,17 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>>> {
             hi: self.hi.min_value(),
             lo: self.hi.min_value(),
         }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb(other.lo, borrow);
+        let (hi, hib) = self.hi.subb(other.hi, lob);
+        (Self { lo, hi }, hib)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let (lo, lob) = self.lo.subb32(other, borrow);
+        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        (Self { lo, hi }, hib)
     }
 }

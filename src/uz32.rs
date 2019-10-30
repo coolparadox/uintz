@@ -137,26 +137,41 @@ mod tests {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn subb32_0() {
+        let (v, c) = new(1).subb32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn subb32_1() {
+        let (v, c) = new(0).subb32(1, false);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
+    #[test]
+    fn subb32_2() {
+        let (v, c) = new(1).subb32(1, true);
+        assert_eq!(v, new(0).max_value());
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz32 {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
-        let nv: u64 = self.v as u64 + other.v as u64 + if carry { 1 } else { 0 };
-        (
-            Self {
-                v: (nv % 0x100000000u64) as u32,
-            },
-            nv / 0x100000000u64 != 0,
-        )
+        self.addc32(other.v, carry)
     }
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let nv: u64 = self.v as u64 + other as u64 + if carry { 1 } else { 0 };
         (
             Self {
-                v: (nv % 0x100000000u64) as u32,
+                v: (nv % 0x1_0000_0000u64) as u32,
             },
-            nv / 0x100000000u64 != 0,
+            nv / 0x1_0000_0000u64 != 0,
         )
     }
 
@@ -175,5 +190,17 @@ impl Uintz for Uz32 {
 
     fn min_value(self) -> Self {
         Self { v: 0 }
+    }
+
+    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
+        self.subb32(other.v, borrow)
+    }
+
+    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
+        let v = self.v as u64;
+        let o = other as u64 + if borrow { 1 } else { 0 };
+        let nb = o > v;
+        let nv = if nb { v + 0x1_0000_0000u64 } else { v } - o;
+        (Self { v: nv as u32 }, nb)
     }
 }
