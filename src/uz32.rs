@@ -95,11 +95,42 @@ mod tests {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz32 {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let nv: u64 = self.v as u64 + other.v as u64 + if carry { 1 } else { 0 };
+        (
+            Self {
+                v: (nv % 0x100000000u64) as u32,
+            },
+            nv / 0x100000000u64 != 0,
+        )
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let nv: u64 = self.v as u64 + other as u64 + if carry { 1 } else { 0 };
         (
             Self {
                 v: (nv % 0x100000000u64) as u32,

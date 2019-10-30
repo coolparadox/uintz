@@ -29,6 +29,12 @@ impl Uintz for Uz<Uz32> {
         (Self { hi, lo }, hic)
     }
 
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        (Self { hi, lo }, hic)
+    }
+
     fn augment(self) -> Uz<Self> {
         Uz {
             hi: self.min_value(),

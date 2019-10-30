@@ -38,6 +38,10 @@ pub trait Uintz {
     where
         Self: std::marker::Sized;
 
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool)
+    where
+        Self: std::marker::Sized;
+
     fn augment(self) -> Uz<Self>
     where
         Self: std::marker::Sized;

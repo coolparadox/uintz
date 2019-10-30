@@ -97,6 +97,27 @@ mod testsz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 #[cfg(test)]
@@ -172,12 +193,39 @@ mod testszz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz32>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -276,12 +324,39 @@ mod testszzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz32>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -380,12 +455,39 @@ mod testszzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -489,12 +591,39 @@ mod testszzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -599,12 +728,39 @@ mod testszzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -710,12 +866,39 @@ mod testszzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -822,12 +1005,39 @@ mod testszzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -935,12 +1145,39 @@ mod testszzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1049,12 +1286,39 @@ mod testszzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1164,12 +1428,39 @@ mod testszzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1280,12 +1571,39 @@ mod testszzzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1397,12 +1715,39 @@ mod testszzzzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1515,12 +1860,39 @@ mod testszzzzzzzzzzzzzz {
         assert_eq!(c, true);
     }
 
+    #[test]
+    fn addc32_0() {
+        let (v, c) = new(0).addc32(1, false);
+        assert_eq!(v, new(1));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_1() {
+        let (v, c) = new(0).addc32(1, true);
+        assert_eq!(v, new(2));
+        assert_eq!(c, false);
+    }
+
+    #[test]
+    fn addc32_2() {
+        let (v, c) = new(0).max_value().addc32(1, false);
+        assert_eq!(v, new(0));
+        assert_eq!(c, true);
+    }
+
 }
 
 impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>>> {
     fn addc(self, other: Self, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc(other.lo, carry);
         let (hi, hic) = self.hi.addc(other.hi, loc);
+        (Self { hi, lo }, hic)
+    }
+
+    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
+        let (lo, loc) = self.lo.addc32(other, carry);
+        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
         (Self { hi, lo }, hic)
     }
 
