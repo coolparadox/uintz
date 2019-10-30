@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e -u -o pipefail
 
-MAX_DEPTH=14
+MAX_DEPTH=12
 
 UZ='../src/uz.rs'
 UZ32='../src/uz32.rs'

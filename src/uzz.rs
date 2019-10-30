@@ -119,6 +119,48 @@ mod testsz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -257,6 +299,48 @@ mod testszz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -309,7 +393,7 @@ impl Uintz for Uz<Uz<Uz32>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -334,6 +418,29 @@ impl Uintz for Uz<Uz<Uz32>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -342,7 +449,7 @@ impl Uintz for Uz<Uz<Uz32>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -442,6 +549,48 @@ mod testszzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -494,7 +643,7 @@ impl Uintz for Uz<Uz<Uz<Uz32>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -519,6 +668,29 @@ impl Uintz for Uz<Uz<Uz<Uz32>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -527,7 +699,7 @@ impl Uintz for Uz<Uz<Uz<Uz32>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -627,6 +799,48 @@ mod testszzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -679,7 +893,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -704,6 +918,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -712,7 +949,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -817,6 +1054,48 @@ mod testszzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -869,7 +1148,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -894,6 +1173,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -902,7 +1204,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -1008,6 +1310,48 @@ mod testszzzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -1060,7 +1404,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1085,6 +1429,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -1093,7 +1460,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -1200,6 +1567,48 @@ mod testszzzzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -1252,7 +1661,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1277,6 +1686,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -1285,7 +1717,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -1393,6 +1825,48 @@ mod testszzzzzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -1445,7 +1919,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1470,6 +1944,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -1478,7 +1975,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -1587,6 +2084,48 @@ mod testszzzzzzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -1639,7 +2178,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1664,6 +2203,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -1672,7 +2234,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -1782,6 +2344,48 @@ mod testszzzzzzzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -1834,7 +2438,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -1859,6 +2463,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -1867,7 +2494,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -1978,6 +2605,48 @@ mod testszzzzzzzzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -2030,7 +2699,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -2055,6 +2724,29 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -2063,7 +2755,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
@@ -2175,6 +2867,48 @@ mod testszzzzzzzzzzzz {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -2227,7 +2961,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -2252,202 +2986,27 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
         }
     }
 
-    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
-        let (lo, lob) = self.lo.subb(other.lo, borrow);
-        let (hi, hib) = self.hi.subb(other.hi, lob);
-        (Self { lo, hi }, hib)
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
     }
 
-    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
-        let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
-        (Self { lo, hi }, hib)
-    }
-}
-
-#[cfg(test)]
-mod testszzzzzzzzzzzzz {
-
-    use crate::*;
-
-    fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-    }
-
-    #[test]
-    fn eq0() {
-        assert_eq!(new(0), new(0));
-    }
-
-    #[test]
-    fn eq1() {
-        assert_ne!(new(0), new(1));
-    }
-
-    #[test]
-    fn eq2() {
-        assert_eq!(new(u32::max_value()), new(u32::max_value()));
-    }
-
-    #[test]
-    fn ord0() {
-        assert!(new(0) < new(1));
-    }
-
-    #[test]
-    fn ord1() {
-        assert!(new(0) < new(u32::max_value()));
-    }
-
-    #[test]
-    fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
-    }
-
-    #[test]
-    fn augment0() {
-        let v = new(u32::max_value());
-        let va = v.augment();
-        assert_eq!(
-            va,
-            Uz {
-                hi: v.min_value(),
-                lo: v,
-            }
-        );
-    }
-
-    #[test]
-    fn addc0() {
-        let (v, c) = new(0).addc(new(1), false);
-        assert_eq!(v, new(1));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc1() {
-        let (v, c) = new(0).addc(new(1), true);
-        assert_eq!(v, new(2));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc2() {
-        let (v, c) = new(0).max_value().addc(new(1), false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn addc32_0() {
-        let (v, c) = new(0).addc32(1, false);
-        assert_eq!(v, new(1));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc32_1() {
-        let (v, c) = new(0).addc32(1, true);
-        assert_eq!(v, new(2));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc32_2() {
-        let (v, c) = new(0).max_value().addc32(1, false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb0() {
-        let (v, c) = new(1).subb(new(1), false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn subb1() {
-        let (v, c) = new(0).subb(new(1), false);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb2() {
-        let (v, c) = new(1).subb(new(1), true);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb32_0() {
-        let (v, c) = new(1).subb32(1, false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn subb32_1() {
-        let (v, c) = new(0).subb32(1, false);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb32_2() {
-        let (v, c) = new(1).subb32(1, true);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-}
-
-impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>> {
-    fn addc(self, other: Self, carry: bool) -> (Self, bool) {
-        let (lo, loc) = self.lo.addc(other.lo, carry);
-        let (hi, hic) = self.hi.addc(other.hi, loc);
-        (Self { hi, lo }, hic)
-    }
-
-    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
-        let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
-        (Self { hi, lo }, hic)
-    }
-
-    fn augment(self) -> Uz<Self> {
-        Uz {
-            hi: self.min_value(),
-            lo: self,
-        }
-    }
-
-    fn max_value(self) -> Self {
-        Self {
-            hi: self.hi.max_value(),
-            lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
-        }
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
     }
 
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
@@ -2458,206 +3017,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
-        (Self { lo, hi }, hib)
-    }
-}
-
-#[cfg(test)]
-mod testszzzzzzzzzzzzzz {
-
-    use crate::*;
-
-    fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-    }
-
-    #[test]
-    fn eq0() {
-        assert_eq!(new(0), new(0));
-    }
-
-    #[test]
-    fn eq1() {
-        assert_ne!(new(0), new(1));
-    }
-
-    #[test]
-    fn eq2() {
-        assert_eq!(new(u32::max_value()), new(u32::max_value()));
-    }
-
-    #[test]
-    fn ord0() {
-        assert!(new(0) < new(1));
-    }
-
-    #[test]
-    fn ord1() {
-        assert!(new(0) < new(u32::max_value()));
-    }
-
-    #[test]
-    fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
-    }
-
-    #[test]
-    fn augment0() {
-        let v = new(u32::max_value());
-        let va = v.augment();
-        assert_eq!(
-            va,
-            Uz {
-                hi: v.min_value(),
-                lo: v,
-            }
-        );
-    }
-
-    #[test]
-    fn addc0() {
-        let (v, c) = new(0).addc(new(1), false);
-        assert_eq!(v, new(1));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc1() {
-        let (v, c) = new(0).addc(new(1), true);
-        assert_eq!(v, new(2));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc2() {
-        let (v, c) = new(0).max_value().addc(new(1), false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn addc32_0() {
-        let (v, c) = new(0).addc32(1, false);
-        assert_eq!(v, new(1));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc32_1() {
-        let (v, c) = new(0).addc32(1, true);
-        assert_eq!(v, new(2));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn addc32_2() {
-        let (v, c) = new(0).max_value().addc32(1, false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb0() {
-        let (v, c) = new(1).subb(new(1), false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn subb1() {
-        let (v, c) = new(0).subb(new(1), false);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb2() {
-        let (v, c) = new(1).subb(new(1), true);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb32_0() {
-        let (v, c) = new(1).subb32(1, false);
-        assert_eq!(v, new(0));
-        assert_eq!(c, false);
-    }
-
-    #[test]
-    fn subb32_1() {
-        let (v, c) = new(0).subb32(1, false);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-    #[test]
-    fn subb32_2() {
-        let (v, c) = new(1).subb32(1, true);
-        assert_eq!(v, new(0).max_value());
-        assert_eq!(c, true);
-    }
-
-}
-
-impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>>>> {
-    fn addc(self, other: Self, carry: bool) -> (Self, bool) {
-        let (lo, loc) = self.lo.addc(other.lo, carry);
-        let (hi, hic) = self.hi.addc(other.hi, loc);
-        (Self { hi, lo }, hic)
-    }
-
-    fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
-        let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
-        (Self { hi, lo }, hic)
-    }
-
-    fn augment(self) -> Uz<Self> {
-        Uz {
-            hi: self.min_value(),
-            lo: self,
-        }
-    }
-
-    fn max_value(self) -> Self {
-        Self {
-            hi: self.hi.max_value(),
-            lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
-        }
-    }
-
-    fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
-        let (lo, lob) = self.lo.subb(other.lo, borrow);
-        let (hi, hib) = self.hi.subb(other.hi, lob);
-        (Self { lo, hi }, hib)
-    }
-
-    fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
-        let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }

@@ -50,6 +50,14 @@ pub trait Uintz {
 
     fn min_value(self) -> Self;
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self)
+    where
+        Self: std::marker::Sized;
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self)
+    where
+        Self: std::marker::Sized;
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool)
     where
         Self: std::marker::Sized;

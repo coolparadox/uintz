@@ -117,6 +117,48 @@ mod tests {
     }
 
     #[test]
+    fn mulc_0() {
+        let (v, c) = new(1).mulc(new(1), new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_1() {
+        let (v, c) = new(4).mulc(new(10), new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc_2() {
+        let (v, c) = new(0).max_value().mulc(new(1), new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
+    fn mulc32_0() {
+        let (v, c) = new(1).mulc32(1, new(0));
+        assert_eq!(v, new(1));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_1() {
+        let (v, c) = new(4).mulc32(10, new(3));
+        assert_eq!(v, new(43));
+        assert_eq!(c, new(0));
+    }
+
+    #[test]
+    fn mulc32_2() {
+        let (v, c) = new(0).max_value().mulc32(1, new(123));
+        assert_eq!(v, new(122));
+        assert_eq!(c, new(1));
+    }
+
+    #[test]
     fn subb0() {
         let (v, c) = new(1).subb(new(1), false);
         assert_eq!(v, new(0));
@@ -190,6 +232,22 @@ impl Uintz for Uz32 {
 
     fn min_value(self) -> Self {
         Self { v: 0 }
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let nv: u64 = self.v as u64 * other as u64 + carry.v as u64;
+        (
+            Self {
+                v: (nv % 0x1_0000_0000u64) as u32,
+            },
+            Self {
+                v: (nv / 0x1_0000_0000u64) as u32,
+            },
+        )
+    }
+
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        self.mulc32(other.v, carry)
     }
 
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {

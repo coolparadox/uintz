@@ -31,7 +31,7 @@ impl Uintz for Uz<Uz32> {
 
     fn addc32(self, other: u32, carry: bool) -> (Self, bool) {
         let (lo, loc) = self.lo.addc32(other, carry);
-        let (hi, hic) = self.hi.addc(self.hi.min_value(), loc);
+        let (hi, hic) = self.hi.addc32(0, loc);
         (Self { hi, lo }, hic)
     }
 
@@ -56,6 +56,29 @@ impl Uintz for Uz<Uz32> {
         }
     }
 
+    fn mulc(self, other: Self, carry: Self) -> (Self, Self) {
+        let (ll, llc) = self.lo.mulc(other.lo, carry.lo);
+        let (hl, hlc) = self.hi.mulc(other.lo, llc);
+        let (lh, lhc) = self.lo.mulc(other.hi, hl);
+        let (hh, hhc) = self.hi.mulc(other.hi, hlc);
+        let (ah, ahc) = lh.addc(carry.hi, false);
+        let (ac, acc) = lhc.addc(hh, ahc);
+        let (aa, _) = hhc.addc32(0, acc);
+        (Self { hi: ah, lo: ll }, Self { hi: aa, lo: ac })
+    }
+
+    fn mulc32(self, other: u32, carry: Self) -> (Self, Self) {
+        let (lo, loc) = self.lo.mulc32(other, carry.lo);
+        let (hi, hic) = self.hi.mulc32(other, loc);
+        (
+            Self { hi, lo },
+            Self {
+                hi: hic.min_value(),
+                lo: hic,
+            },
+        )
+    }
+
     fn subb(self, other: Self, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb(other.lo, borrow);
         let (hi, hib) = self.hi.subb(other.hi, lob);
@@ -64,7 +87,7 @@ impl Uintz for Uz<Uz32> {
 
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool) {
         let (lo, lob) = self.lo.subb32(other, borrow);
-        let (hi, hib) = self.hi.subb(self.hi.min_value(), lob);
+        let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
 }
