@@ -58,7 +58,7 @@ mod tests {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -68,7 +68,7 @@ mod tests {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -219,7 +219,7 @@ impl Uintz for Uz32 {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
     }
@@ -230,7 +230,7 @@ impl Uintz for Uz32 {
         }
     }
 
-    fn min_value(self) -> Self {
+    fn zero(self) -> Self {
         Self { v: 0 }
     }
 

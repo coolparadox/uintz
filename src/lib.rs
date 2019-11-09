@@ -20,7 +20,7 @@
 
 pub mod uz;
 pub mod uz32;
-pub mod uzz;
+//pub mod uzz;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Copy, Clone)]
 pub struct Uz32 {
@@ -48,7 +48,7 @@ pub trait Uintz {
 
     fn max_value(self) -> Self;
 
-    fn min_value(self) -> Self;
+    fn zero(self) -> Self;
 
     fn mulc(self, other: Self, carry: Self) -> (Self, Self)
     where

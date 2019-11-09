@@ -37,7 +37,7 @@ impl Uintz for Uz<Uz32> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
     }
@@ -49,10 +49,10 @@ impl Uintz for Uz<Uz32> {
         }
     }
 
-    fn min_value(self) -> Self {
+    fn zero(self) -> Self {
         Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
         }
     }
 
@@ -73,7 +73,7 @@ impl Uintz for Uz<Uz32> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
