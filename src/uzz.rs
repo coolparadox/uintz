@@ -60,7 +60,7 @@ mod testsz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -70,7 +70,7 @@ mod testsz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -240,7 +240,7 @@ mod testszz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -250,7 +250,7 @@ mod testszz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -399,22 +399,19 @@ impl Uintz for Uz<Uz<Uz32>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -435,7 +432,7 @@ impl Uintz for Uz<Uz<Uz32>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -451,6 +448,13 @@ impl Uintz for Uz<Uz<Uz32>> {
         let (lo, lob) = self.lo.subb32(other, borrow);
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
+    }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
     }
 }
 
@@ -490,7 +494,7 @@ mod testszzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -500,7 +504,7 @@ mod testszzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -649,22 +653,19 @@ impl Uintz for Uz<Uz<Uz<Uz32>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -685,7 +686,7 @@ impl Uintz for Uz<Uz<Uz<Uz32>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -701,6 +702,13 @@ impl Uintz for Uz<Uz<Uz<Uz32>>> {
         let (lo, lob) = self.lo.subb32(other, borrow);
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
+    }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
     }
 }
 
@@ -740,7 +748,7 @@ mod testszzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -750,7 +758,7 @@ mod testszzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -899,22 +907,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -935,7 +940,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -952,6 +957,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz32>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -960,12 +972,7 @@ mod testszzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -995,7 +1002,7 @@ mod testszzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -1005,7 +1012,7 @@ mod testszzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -1154,22 +1161,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -1190,7 +1194,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -1207,6 +1211,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz32>>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -1215,13 +1226,7 @@ mod testszzzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -1251,7 +1256,7 @@ mod testszzzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -1261,7 +1266,7 @@ mod testszzzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -1410,22 +1415,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -1446,7 +1448,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -1463,6 +1465,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -1471,14 +1480,7 @@ mod testszzzzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -1508,7 +1510,7 @@ mod testszzzzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -1518,7 +1520,7 @@ mod testszzzzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -1667,22 +1669,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -1703,7 +1702,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -1720,6 +1719,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -1728,15 +1734,7 @@ mod testszzzzzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -1766,7 +1764,7 @@ mod testszzzzzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -1776,7 +1774,7 @@ mod testszzzzzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -1925,22 +1923,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -1961,7 +1956,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -1978,6 +1973,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -1986,16 +1988,7 @@ mod testszzzzzzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -2025,7 +2018,7 @@ mod testszzzzzzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -2035,7 +2028,7 @@ mod testszzzzzzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -2184,22 +2177,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -2220,7 +2210,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -2237,6 +2227,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -2245,17 +2242,7 @@ mod testszzzzzzzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment().augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -2285,7 +2272,7 @@ mod testszzzzzzzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -2295,7 +2282,7 @@ mod testszzzzzzzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -2444,22 +2431,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -2480,7 +2464,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -2497,6 +2481,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -2505,18 +2496,7 @@ mod testszzzzzzzzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment().augment().augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -2546,7 +2526,7 @@ mod testszzzzzzzzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -2556,7 +2536,7 @@ mod testszzzzzzzzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -2705,22 +2685,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -2741,7 +2718,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -2758,6 +2735,13 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>> {
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
     }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -2766,19 +2750,7 @@ mod testszzzzzzzzzzzz {
     use crate::*;
 
     fn new(v: u32) -> Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
-        from_u32(v)
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
-            .augment()
+        from_u32(v).augment().augment().augment().augment().augment().augment().augment().augment().augment().augment().augment().augment()
     }
 
     #[test]
@@ -2808,7 +2780,7 @@ mod testszzzzzzzzzzzz {
 
     #[test]
     fn min_value0() {
-        assert_eq!(new(u32::max_value()).min_value(), new(0));
+        assert_eq!(new(u32::max_value()).zero(), new(0));
     }
 
     #[test]
@@ -2818,7 +2790,7 @@ mod testszzzzzzzzzzzz {
         assert_eq!(
             va,
             Uz {
-                hi: v.min_value(),
+                hi: v.zero(),
                 lo: v,
             }
         );
@@ -2967,22 +2939,19 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
 
     fn augment(self) -> Uz<Self> {
         Uz {
-            hi: self.min_value(),
+            hi: self.zero(),
             lo: self,
         }
+    }
+
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn min_value(self) -> Self {
-        Self {
-            hi: self.hi.min_value(),
-            lo: self.hi.min_value(),
         }
     }
 
@@ -3003,7 +2972,7 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
         (
             Self { hi, lo },
             Self {
-                hi: hic.min_value(),
+                hi: hic.zero(),
                 lo: hic,
             },
         )
@@ -3019,5 +2988,12 @@ impl Uintz for Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz<Uz32>>>>>>>>>>>> {
         let (lo, lob) = self.lo.subb32(other, borrow);
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
+    }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
     }
 }

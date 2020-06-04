@@ -224,10 +224,8 @@ impl Uintz for Uz32 {
         }
     }
 
-    fn max_value(self) -> Self {
-        Self {
-            v: u32::max_value(),
-        }
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
     }
 
     fn zero(self) -> Self {
@@ -260,5 +258,11 @@ impl Uintz for Uz32 {
         let nb = o > v;
         let nv = if nb { v + 0x1_0000_0000u64 } else { v } - o;
         (Self { v: nv as u32 }, nb)
+    }
+
+    fn max_value(self) -> Self {
+        Self {
+            v: u32::max_value(),
+        }
     }
 }

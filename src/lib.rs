@@ -46,9 +46,11 @@ pub trait Uintz {
     where
         Self: std::marker::Sized;
 
-    fn max_value(self) -> Self;
+    fn divr32(self, divisor: u32) -> (Self, u32)
+    where
+        Self: std::marker::Sized;
 
-    fn zero(self) -> Self;
+    fn max_value(self) -> Self;
 
     fn mulc(self, other: Self, carry: Self) -> (Self, Self)
     where
@@ -65,6 +67,8 @@ pub trait Uintz {
     fn subb32(self, other: u32, borrow: bool) -> (Self, bool)
     where
         Self: std::marker::Sized;
+
+    fn zero(self) -> Self;
 }
 
 pub fn from_u32(v: u32) -> Uz32 {

@@ -42,17 +42,14 @@ impl Uintz for Uz<Uz32> {
         }
     }
 
+    fn divr32(self, divisor: u32) -> (Self, u32) {
+        (self, 0)
+    }
+
     fn max_value(self) -> Self {
         Self {
             hi: self.hi.max_value(),
             lo: self.hi.max_value(),
-        }
-    }
-
-    fn zero(self) -> Self {
-        Self {
-            hi: self.hi.zero(),
-            lo: self.hi.zero(),
         }
     }
 
@@ -89,5 +86,12 @@ impl Uintz for Uz<Uz32> {
         let (lo, lob) = self.lo.subb32(other, borrow);
         let (hi, hib) = self.hi.subb32(0, lob);
         (Self { lo, hi }, hib)
+    }
+
+    fn zero(self) -> Self {
+        Self {
+            hi: self.hi.zero(),
+            lo: self.hi.zero(),
+        }
     }
 }
